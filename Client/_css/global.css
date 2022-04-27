@@ -1,0 +1,92 @@
+body{background-color: #d9d9d9;}
+
+/*Preview*/
+.ItemBox {display: inline-table; margin-top: 15px;}
+
+#BaseBox{margin-top: 5px;}
+#CabeloBox{width: 415px;}
+#RoupaBox{width: 230px}
+
+/*Loja*/
+.LojaRoupa{display: contents;}
+
+.Painel{
+    color: rgb(78, 85, 102);
+    text-align: center;
+    font-weight: bold;
+    max-width: 40em;
+    margin: auto auto 2em auto;
+    padding: 1em;
+    background-color: rgb(243 242 229);
+    border: 0.6em double rgb(120 115 126);
+    box-shadow: 0.4em 0.5em 0.75em 0.1em rgb(130 135 140);
+    border-radius: 12px;
+}
+
+.Pe{margin-bottom: 0px;}
+
+#Reg-Log,#Log-Reg{
+    padding: 0; cursor: pointer;
+    border: none; background: none;
+    font-weight: bold;
+    color: darkcyan;
+}
+
+#UserDiv{
+    display: grid;
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.InputData {
+    display: inline-block;
+    height: 2.5em;
+    min-width: 200px;
+    background: #607d8b;
+    box-shadow: 0.2em 0.2em 0.25em #646262 inset;
+    text-align: center;
+    font-size: 0.8em;
+    vertical-align: middle;
+    color: rgba(245, 245, 245, 255);
+    border: none;
+    border-radius: 0.25em;
+    margin-top: 8px;
+}
+.InputData:focus {
+    outline: solid #607d8b;
+    outline-offset: 0.15em;
+}
+.InputData::placeholder {color: rgba(255, 255, 255, 0.651);}
+
+/*Tabs*/
+.tab {
+    border-radius: 6px 6px 0 0;
+    border-color: white;
+    padding: 5px;
+    font-size: 1em;
+    background: #607d8b;
+    color: rgba(245, 245, 245, 255);
+}
+  
+.tabs {
+    padding: 12rem 0 0 0;
+    width: 100%;
+}
+
+#divisor{margin: 0px}
+  
+/*Estilos das opções*/
+input[type=radio] {display:none;}
+input[type=radio] + label>img { width: 40px; height: auto; padding: 2px; image-rendering: pixelated;}
+input[type=radio]:checked + label>img {transform: translateY(-10px);}
+
+/*Preview Player*/
+.FramePosition{position: relative; margin-top: -10px; left: -13%;}
+#Preview>img{image-rendering: pixelated; position: absolute;}
+#Background{width: 160px; padding-top: 22px}
+#Bases,#Roupas,#Cabelos{padding-left: 38px; width: 80px; height: auto;}
+
+/*Interação*/
+#DesenhoDiv{
+    display: none;
+}
