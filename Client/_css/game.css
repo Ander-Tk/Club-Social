@@ -65,7 +65,7 @@ canvas#GameCanvas{background-color: #fff;}
     padding: 0px 10px 0px 5px;
     border-radius: 0px 0px 15px 0px;
 }
-.close:hover,.close:focus {color: rgb(83, 83, 83); text-decoration: none; cursor: pointer;}
+.close:hover,.close:focus {color: rgb(83, 83, 83); text-decoration: none; cursor: url(/Client/_css/link.cur), pointer;}
   
 #Mapa>button{
     position: relative; left: 25%;

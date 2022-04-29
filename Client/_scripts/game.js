@@ -43,19 +43,19 @@ function CabeloValue() {
 }
 
 LoginBtn.onclick = function () {
-    //if(InputUser.value === ''){ //Só pode entrar com um nome de usuário.
-    //    return
-    //}else{
+    if(UserLogin.value === ''){ //Só pode entrar com um nome de usuário.
+        return
+    }else{
     socket.emit('Login', { username: UserLogin.value, password: PasswordLogin.value });
-    //}
+    }
 }
 
 RegistroBtn.onclick = function () {
-    //if(InputUser.value === ''){ //Só pode entrar com um nome de usuário.
-    //    return
-    //}else{
+    if(UserRegistro.value === '' || PasswordRegistro.value === ''){ //Só pode Cadastrar com um nome de usuário e senha.
+        return
+    }else{
     socket.emit('Registro', { username: UserRegistro.value, password: PasswordRegistro.value, base: BaseValue(), roupa: RoupaValue(), cabelo: CabeloValue() });
-    //}
+    }
 }
 
 RegLog.onclick = function(){
@@ -82,6 +82,7 @@ socket.on('RegistroResp', function (data) {
 
 //Interface
 var GameUI = document.getElementById("GameUI");
+var DesenhoDiv = document.getElementById("DesenhoDiv");
 var DrawMenu = document.getElementById("DrawMenu");
 var DrawPintor = document.getElementById("DrawPintor");
 
@@ -128,12 +129,12 @@ var Rotas = function(){
     }
     else if(player.Rota == 'Escola-Centro'){
         socket.emit('Rota');
-        socket.emit('changeMap', { Mapa: 'Centro', OldMap: Player.list[selfID].Map, PosX: 725, PosY: 170});
+        socket.emit('changeMap', { Mapa: 'Centro', OldMap: Player.list[selfID].Map, PosX: 745, PosY: 170});
     }
     //Caminhos do Centro
     else if(player.Rota == 'Centro-Praia'){
         socket.emit('Rota');
-        socket.emit('changeMap', { Mapa: 'Praia', OldMap: Player.list[selfID].Map, PosX: 250, PosY: 70});
+        socket.emit('changeMap', { Mapa: 'Praia', OldMap: Player.list[selfID].Map, PosX: 480, PosY: 75});
     }
     else if(player.Rota == 'Centro-Rota'){
         socket.emit('Rota');
@@ -145,11 +146,11 @@ var Rotas = function(){
     }
     else if(player.Rota == 'Centro-Loja'){
         socket.emit('Rota');
-        socket.emit('changeMap', { Mapa: 'Loja', OldMap: Player.list[selfID].Map, PosX: 400, PosY: 240});
+        socket.emit('changeMap', { Mapa: 'Loja', OldMap: Player.list[selfID].Map, PosX: 340, PosY: 375});
     }
     else if(player.Rota == 'Centro-Escola'){
         socket.emit('Rota');
-        socket.emit('changeMap', { Mapa: 'Escola', OldMap: Player.list[selfID].Map, PosX: 400, PosY: 240});
+        socket.emit('changeMap', { Mapa: 'Escola', OldMap: Player.list[selfID].Map, PosX: 660, PosY: 375});
     }
 }
 
@@ -335,6 +336,10 @@ Img.Map['Praia'] = new Image();
 Img.Map['Praia'].src = "/Client/Sprites/Mapas/praia.png";
 Img.Map['Cafe'] = new Image();
 Img.Map['Cafe'].src = "/Client/Sprites/Mapas/cafe.png";
+Img.Map['Escola'] = new Image();
+Img.Map['Escola'].src = "/Client/Sprites/Mapas/escola.png";
+Img.Map['Loja'] = new Image();
+Img.Map['Loja'].src = "/Client/Sprites/Mapas/loja.png";
 
 //Desenha o mapa
 drawMap = function () {
@@ -423,16 +428,24 @@ var GameLogic = function () {
                     document.removeEventListener('mousemove', throttle(onMouseMove, 100), false);
                     return
                 }
-            }//else if (PlayerDesenho.lenght > 5){ //Limitar numero de jogadores
-            //    console.log('muitos  jogadores');
-            //    socket.emit('changeMap',{Mapa:'Centro', OldMap:Player.list[(PlayerDesenho[5])].Map});
-            //}
+            }else if (PlayerDesenho.lenght > 5){ //Limitar numero de jogadores
+                socket.emit('changeMap',{Mapa:'Escola', OldMap:Player.list[(PlayerDesenho[5])].Map});
+            }
 
             break;
+        case 'Escola':
+            canvas.style.display = "block";
+            GameUI.style.display =  "block";
+            DesenhoDiv.style.display = 'block';
+            GameCanvas.style.display = "none"; 
+            DrawMenu.style.display =  "none";
+            DrawPintor.style.display =  "none";
 
+            break;
         default:
             canvas.style.display = "block";
             GameUI.style.display =  "block";
+            DesenhoDiv.style.display = 'none';
             GameCanvas.style.display = "none"; 
             DrawMenu.style.display =  "none";
             DrawPintor.style.display =  "none";

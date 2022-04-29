@@ -1,4 +1,12 @@
+*{cursor: url('/Client/_css/default.cur'), auto;}
+
 body{background-color: #d9d9d9;}
+
+/*Logotipo*/
+#ClubLogo{
+    width: 175px;
+    margin: 0px 15px 5px 14px;
+}
 
 /*Preview*/
 .ItemBox {display: inline-table; margin-top: 15px;}
@@ -26,9 +34,9 @@ body{background-color: #d9d9d9;}
 .Pe{margin-bottom: 0px;}
 
 #Reg-Log,#Log-Reg{
-    padding: 0; cursor: pointer;
+    cursor: url(/Client/_css/link.cur), pointer;
     border: none; background: none;
-    font-weight: bold;
+    font-weight: bold; padding: 0;
     color: darkcyan;
 }
 

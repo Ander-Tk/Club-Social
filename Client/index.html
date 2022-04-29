@@ -10,6 +10,7 @@
     <div id="LoginDiv">
         <form action="javascript:void(0);" autocomplete="off" id="LoginForm" class="Painel">
         <div id="UserDiv">
+        <img id="ClubLogo" src="/Client/Sprites/Logo.png">
         <input class="InputData" id="UserLogin" type="text" maxlength="20" placeholder="Usuário" required></input>
         <input class="InputData" id="PasswordLogin" type="password" maxlength="20" placeholder="Senha" required></input>
         <br></div>
@@ -22,6 +23,7 @@
     <div id="RegistroDiv" style="display:none;">
         <form action="javascript:void(0);" autocomplete="off" id="RegistroForm" class="Painel">
         <div id="UserDiv">
+        <img id="ClubLogo" src="/Client/Sprites/Logo.png">
         <input class="InputData" id="UserRegistro" type="text" maxlength="20" placeholder="Usuário" required></input>
         <input class="InputData" id="PasswordRegistro" type="password" maxlength="20" placeholder="Senha" required></input>
         <br></div>
@@ -187,7 +189,7 @@
     <div id="DrawMenu" class="GameInterface" style="width: 800px; height: 480px;">
         <div id="ConteudoDesenho">
             <div id="TemaDiv"></div>
-            <button class="DrawBtn" onclick="changeMap('Centro', 400, 240)">Sair</button>
+            <button class="DrawBtn" onclick="changeMap('Escola', 660, 375)">Sair</button>
         </div>
     </div>
     <div id="DrawPintor" class="GameInterface" style="width: 800px; height: 480px;">
@@ -206,13 +208,16 @@
                 <div class="color dodgerblue"></div>
             </div>
             <div id="PalavraDiv"></div>
-            <button class="DrawBtn" onclick="changeMap('Centro', 400, 240)">Sair</button>
+            <button class="DrawBtn" onclick="changeMap('Escola', 660, 375)">Sair</button>
             <button class="DrawBtn" onclick="Clear()">Apagar</button>
         </div>
     </div>
 
     <div id="GameUI" class="GameInterface" style="width: 800px; height: 480px;">
         <button class="GameBTN" id="ModalMapBtn"><img class="GameIcon" src="/Client/Sprites/miniWorld.png"></button>
+        <div id="DesenhoDiv">
+            <button class="GameBTN" onclick="changeMap(this.id)" id="Desenho"><img class="GameIcon" src="/Client/Sprites/Painter.png"></button>
+        </div>
         <!-- Mapa -->
         <div class="Modal" id="ModalMap">
             <div id="Mapa">
@@ -220,7 +225,6 @@
                 <button class="GameBTN" onclick="changeMap((this.id), 370, 350)" id="Floresta"><img class="Badge" id="BadgeFloresta" src="/Client/Sprites/FlorestaBadge.png"></button>
                 <button class="GameBTN" onclick="changeMap((this.id), 400, 240)" id="Centro"><img class="Badge" id="BadgeCentro" src="/Client/Sprites/CentroBadge.png"></button>
                 <button class="GameBTN" onclick="changeMap((this.id), 250, 50)" id="Praia"><img class="Badge" id="BadgePraia" src="/Client/Sprites/PraiaBadge.png"></button>
-                <button onclick="changeMap(this.id)" id="Desenho">Desenho</button>
             </div>
         </div>
     </div>
