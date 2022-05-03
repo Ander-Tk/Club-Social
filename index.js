@@ -30,7 +30,7 @@ const pool = new Pool({
 async function ValidPassword(data){//Verifica se a senha está correta
 	try{
 		await pool.connect()
-		LoginQuery = await pool.query("select * from userlist WHERE username = $1 and senha = crypt($2, senha)", [data.username, data.password])
+		LoginQuery = await pool.query("select * from player INNER JOIN itens ON player.id_Player = itens.id_Player INNER JOIN casa ON player.id_Player = casa.id_Player WHERE username = $1 and senha = crypt($2, senha)", [data.username, data.password])
 	}catch(err){
 		console.log('erro: %d', err.stack)
 		await pool.query("ROLLBACK")
@@ -43,7 +43,7 @@ async function ValidPassword(data){//Verifica se a senha está correta
 async function UsernameTaken(data){//Verifica se o  usuário está disponível
 	try{
 		await pool.connect();
-		RegisterQuery = await pool.query('SELECT * FROM userlist WHERE username = $1', [data.username])
+		RegisterQuery = await pool.query('SELECT * FROM player WHERE username = $1', [data.username])
 	}catch(err){
 		console.log('erro: %d', err.stack)
 		await pool.query("ROLLBACK")
@@ -56,7 +56,8 @@ async function UsernameTaken(data){//Verifica se o  usuário está disponível
 async function addUser(data){//Adiciona usuário no banco de dados
 	try{
 		console.log(data)
-		await pool.query("insert into userlist(username, senha, base, roupa, cabelo) values ($1, crypt($2, gen_salt('bf')), $3, $4, $5)", [data.username, data.password, data.base, data.roupa, data.cabelo])
+		await pool.query("insert into player(username, senha, moedas) values ($1, crypt($2, gen_salt('bf')), 500)", [data.username, data.password])
+		await pool.query("insert into itens (base, roupa, cabelo, adicional) values ($1, $2, $3, $4)", [data.base, data.roupa, data.cabelo, 'Adc-00'])
 	}catch(err){
 		console.log('erro: %d', err.stack)
 		await pool.query("ROLLBACK")
@@ -64,6 +65,35 @@ async function addUser(data){//Adiciona usuário no banco de dados
 		//await  pool.end()
 	}
 } 
+
+async function UpdateRoupas(data){//Atualiza as Roupas
+	try{
+		console.log(data)
+		await pool.query("update itens i set base = $1 from player p where p.id_player = i.id_player and username = $2;", [data.base, data.username])
+		await pool.query("update itens i set roupa = $1 from player p where p.id_player = i.id_player and username = $2;", [data.roupa, data.username])
+		await pool.query("update itens i set cabelo = $1 from player p where p.id_player = i.id_player and username = $2;", [data.cabelo, data.username])
+		await pool.query("update itens i set adicional = $1 from player p where p.id_player = i.id_player and username = $2;", [data.adicional, data.username])
+	}catch(err){
+		console.log('erro: %d', err.stack)
+		await pool.query("ROLLBACK")
+	}finally{
+		//await  pool.end()
+	}
+} 
+
+async function UpdateCasa(data){//Atualiza a Casa
+	try{
+		console.log(data)
+		await pool.query("update casa c set parede = $1 from player p where p.id_player = c.id_player and username = $2;", [data.parede, data.username])
+		await pool.query("update casa c set piso = $1 from player p where p.id_player = c.id_player and username = $2;", [data.piso, data.username])
+	}catch(err){
+		console.log('erro: %d', err.stack)
+		await pool.query("ROLLBACK")
+	}finally{
+		//await  pool.end()
+	}
+} 
+
 
 //Player
 var Player = function(data){
@@ -74,9 +104,16 @@ var Player = function(data){
 		Rota:null,
 		username:data.username,
 		PlayerColor:data.PlayerColor,
+		//Roupas
 		base:data.base,
 		roupa:data.roupa,
 		cabelo:data.cabelo,
+		adicional:data.adicional,
+		//Casa
+		layout:data.layout,
+		parede:data.parede,
+		piso:data.piso,
+		//Movimento
 		pressingRight:false,
 		pressingLeft:false,
 		pressingUp:false,
@@ -390,7 +427,7 @@ var Player = function(data){
 	}
 
 	self.getInitPack = function(){//Retorna as características iniciais do player
-		return{id:self.id, x:self.x, y:self.y, map:self.map, base:self.base, roupa:self.roupa, cabelo:self.cabelo, username:self.username}
+		return{id:self.id, x:self.x, y:self.y, map:self.map, base:self.base, roupa:self.roupa, cabelo:self.cabelo, adicional:self.adicional, username:self.username}
 	}
 	self.getUpdatePack = function(){
 		return{id:self.id, x:self.x, y:self.y, map:self.map, Rota:self.Rota,
@@ -432,7 +469,7 @@ var TempoDesenho = 120; // 2 minutos para desenhar
 var TimeID = null;
 
 //Funções do Player
-Player.onConnect = function(socket, base, roupa, cabelo, username, map){
+Player.onConnect = function(socket, base, roupa, cabelo, adicional, username, map){
 	var map = 'Centro';
 	socket.join(map);
 
@@ -440,7 +477,7 @@ Player.onConnect = function(socket, base, roupa, cabelo, username, map){
 
 	var player = Player({
 		id:socket.id, 
-		base:base, roupa:roupa, cabelo:cabelo, 
+		base:base, roupa:roupa, cabelo:cabelo, adicional:adicional, 
 		username:username, 
 		map:map,
 		PlayerColor:PlayerColor,
@@ -627,7 +664,7 @@ io.on('connection', (socket) => {
 		var res = ValidPassword(data)
 		res.then(res => {
 			if(res.rows[0] != undefined){
-				Player.onConnect(socket, res.rows[0].base, res.rows[0].roupa, res.rows[0].cabelo, res.rows[0].username);
+				Player.onConnect(socket, res.rows[0].base, res.rows[0].roupa, res.rows[0].cabelo, res.rows[0].adicional, res.rows[0].username);
 				socket.emit('LoginResp',{success:true});
 			}
 			else{

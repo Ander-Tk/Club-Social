@@ -92,9 +92,7 @@ input[type=radio]:checked + label>img {transform: translateY(-10px);}
 .FramePosition{position: relative; margin-top: -10px; left: -13%;}
 #Preview>img{image-rendering: pixelated; position: absolute;}
 #Background{width: 160px; padding-top: 22px}
-#Bases,#Roupas,#Cabelos{padding-left: 38px; width: 80px; height: auto;}
+#Bases,#Roupas,#Cabelos,#Adicional{padding-left: 38px; width: 80px; height: auto;}
 
 /*Interação*/
-#DesenhoDiv{
-    display: none;
-}
+#DesenhoDiv{display: none;}

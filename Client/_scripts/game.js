@@ -42,8 +42,17 @@ function CabeloValue() {
     }
 }
 
+//Escolha do Adicional
+function AdicionalValue() {
+    var Adicional = document.getElementsByName('RadioAdicional');
+    for (i = 0; i < Adicional.length; i++) {
+        if (Adicional[i].checked)
+            return Adicional[i].value;
+    }
+}
+
 LoginBtn.onclick = function () {
-    if(UserLogin.value === ''){ //Só pode entrar com um nome de usuário.
+    if(UserLogin.value === '' || PasswordLogin.value === ''){ //Só pode entrar com um nome de usuário.
         return
     }else{
     socket.emit('Login', { username: UserLogin.value, password: PasswordLogin.value });
@@ -68,9 +77,11 @@ LogReg.onclick = function(){
 }
 
 socket.on('LoginResp', function (data) {
-    if (data.success) {
-        LoginDiv.style.display = 'none';
+    if (data.success) {//Torna visivel o Jogo.
         GameDiv.style.display = 'inline-block';
+        //Destroi as guias Login//Registro
+        LoginDiv.remove();
+        RegistroDiv.remove();
     }else{alert("Err");}
 });
 
@@ -234,7 +245,7 @@ Img.player['Roupa-08'] = new Image(); //Vestido Roxo
 Img.player['Roupa-08'].src = "/Client/Sprites/Roupa/Roupa-08.png";
 Img.player['Roupa-09'] = new Image(); //Vestido Vermelho
 Img.player['Roupa-09'].src = "/Client/Sprites/Roupa/Roupa-09.png";
-//Roupas Adicionais
+// +Roupas
 Img.player['Roupa-10'] = new Image();
 Img.player['Roupa-10'].src = "/Client/Sprites/Roupa/Roupa-10.png";
 Img.player['Roupa-11'] = new Image(); 
@@ -293,7 +304,7 @@ Img.player['Cabelo-16'] = new Image();
 Img.player['Cabelo-16'].src = "/Client/Sprites/Cabelo/Cabelo-16.png";
 Img.player['Cabelo-17'] = new Image();
 Img.player['Cabelo-17'].src = "/Client/Sprites/Cabelo/Cabelo-17.png";
-//Cabelos Adicionais
+// +Cabelos
 Img.player['Cabelo-18'] = new Image();
 Img.player['Cabelo-18'].src = "/Client/Sprites/Cabelo/Cabelo-18.png";
 Img.player['Cabelo-19'] = new Image();
@@ -320,10 +331,24 @@ Img.player['Cabelo-29'] = new Image();
 Img.player['Cabelo-29'].src = "/Client/Sprites/Cabelo/Cabelo-29.png";
 Img.player['Cabelo-30'] = new Image();
 Img.player['Cabelo-30'].src = "/Client/Sprites/Cabelo/Cabelo-30.png";
-Img.player['Cabelo-31'] = new Image();
-Img.player['Cabelo-31'].src = "/Client/Sprites/Cabelo/Cabelo-31.png";
-Img.player['Cabelo-32'] = new Image();
-Img.player['Cabelo-32'].src = "/Client/Sprites/Cabelo/Cabelo-32.png";
+
+//Item Adicional
+Img.player['Adc-00'] = new Image();
+Img.player['Adc-00'].src = "/Client/Sprites/Adicional/Adc-00.png";
+Img.player['Adc-01'] = new Image();
+Img.player['Adc-01'].src = "/Client/Sprites/Adicional/Adc-01.png";
+Img.player['Adc-02'] = new Image();
+Img.player['Adc-02'].src = "/Client/Sprites/Adicional/Adc-02.png";
+Img.player['Adc-03'] = new Image();
+Img.player['Adc-03'].src = "/Client/Sprites/Adicional/Adc-03.png";
+Img.player['Adc-04'] = new Image();
+Img.player['Adc-04'].src = "/Client/Sprites/Adicional/Adc-04.png";
+Img.player['Adc-05'] = new Image();
+Img.player['Adc-05'].src = "/Client/Sprites/Adicional/Adc-05.png";
+Img.player['Adc-06'] = new Image();
+Img.player['Adc-06'].src = "/Client/Sprites/Adicional/Adc-06.png";
+Img.player['Adc-07'] = new Image();
+Img.player['Adc-07'].src = "/Client/Sprites/Adicional/Adc-07.png";
 
 //Mapas
 Img.Map['Centro'] = new Image();
@@ -617,11 +642,21 @@ var Player = function (pack) {
     self.Name = pack.username;
     self.Rota = pack.Rota;
     self.Map = pack.map;
+
+    //Posição no canvas
     self.x = pack.x;
     self.y = pack.y;
+
+    //Roupas
     self.base = pack.base;
     self.roupa = pack.roupa;
     self.cabelo = pack.cabelo;
+    self.adicional = pack.adicional;
+
+    //Casa Jogador
+    //self.layout = pack.layout;
+    //self.parede = pack.parede;
+    //self.piso = pack.piso;
 
     //Direções
     self.Right = pack.Right;
@@ -645,10 +680,10 @@ var Player = function (pack) {
     //Desenha o jogador
     self.drawPlayer = function () {
         if (Player.list[selfID].Map !== self.Map)
-            return; //Desenha apenas os players no mesmo local
+            return; //Desenha apenas os players no mesmo local;
 
         if (Gamelist.includes(self.Map))
-            return; //Se estiver jogando não desenha o player
+            return; //Se estiver jogando[minigame] não desenha o player;
 
         if (self.Right) {
             contador++;
@@ -659,6 +694,7 @@ var Player = function (pack) {
             ctx.drawImage(Img.player[self.base], 16 * FrameRight, 32, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
             ctx.drawImage(Img.player[self.roupa], 16 * FrameRight, 32, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
             ctx.drawImage(Img.player[self.cabelo], 16 * FrameRight, 32, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
+            ctx.drawImage(Img.player[self.adicional], 16 * FrameRight, 32, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
         }
         else if (self.Left) {
             contador++;
@@ -669,6 +705,7 @@ var Player = function (pack) {
             ctx.drawImage(Img.player[self.base], 16 * FrameLeft, 96, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
             ctx.drawImage(Img.player[self.roupa], 16 * FrameLeft, 96, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
             ctx.drawImage(Img.player[self.cabelo], 16 * FrameLeft, 96, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
+            ctx.drawImage(Img.player[self.adicional], 16 * FrameLeft, 96, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
         }
         else if (self.Up) {
             contador++;
@@ -679,6 +716,7 @@ var Player = function (pack) {
             ctx.drawImage(Img.player[self.base], 16 * FrameUp, 64, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
             ctx.drawImage(Img.player[self.roupa], 16 * FrameUp, 64, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
             ctx.drawImage(Img.player[self.cabelo], 16 * FrameUp, 64, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
+            ctx.drawImage(Img.player[self.adicional], 16 * FrameUp, 64, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
         }
         else if (self.Down) {
             contador++;
@@ -689,11 +727,13 @@ var Player = function (pack) {
             ctx.drawImage(Img.player[self.base], 16 * FrameDown, 0, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
             ctx.drawImage(Img.player[self.roupa], 16 * FrameDown, 0, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
             ctx.drawImage(Img.player[self.cabelo], 16 * FrameDown, 0, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
+            ctx.drawImage(Img.player[self.adicional], 16 * FrameDown, 0, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
         }
         else {
             ctx.drawImage(Img.player[self.base], 0, 0, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
             ctx.drawImage(Img.player[self.roupa], 0, 0, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
             ctx.drawImage(Img.player[self.cabelo], 0, 0, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
+            ctx.drawImage(Img.player[self.adicional], 0, 0, SpriteWidth / 4, SpriteHeight / 4, (self.x - 10), (self.y - 45), SpriteWidth / 1.5, SpriteHeight / 1.5);
         }
     }
     return self;

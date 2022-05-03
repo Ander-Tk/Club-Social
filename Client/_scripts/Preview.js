@@ -116,12 +116,6 @@ function PreviewCabelo(data) {
         case 'C30':
             Cabelo.src = CabeloURL + data + ".png";
             break;
-        case 'C31':
-            Cabelo.src = CabeloURL + data + ".png";
-            break;
-        case 'C32':
-            Cabelo.src = CabeloURL + data + ".png";
-            break;
     }
 }
 
@@ -189,6 +183,38 @@ function PreviewRoupa(data) {
             break;
         case 'R19':
             Roupa.src = RoupaURL + data + ".png";
+            break;
+    }
+}
+
+// Adicionais
+function PreviewAdicional(data) {
+    var Adicional = document.getElementById("Adicional");
+    var AdicionalURL = '/Client/Sprites/Preview/PreviewAdicional/';
+    switch (data) {
+        case 'ADC0':
+            Adicional.src = AdicionalURL + data + ".png";
+            break;
+        case 'ADC1':
+            Adicional.src = AdicionalURL + data + ".png";
+            break;
+        case 'ADC2':
+            Adicional.src = AdicionalURL + data + ".png";
+            break;
+        case 'ADC3':
+            Adicional.src = AdicionalURL + data + ".png";
+            break;
+        case 'ADC4':
+            Adicional.src = AdicionalURL + data + ".png";
+            break;
+        case 'ADC5':
+            Adicional.src = AdicionalURL + data + ".png";
+            break;
+        case 'ADC6':
+            Adicional.src = AdicionalURL + data + ".png";
+            break;
+        case 'ADC7':
+            Adicional.src = AdicionalURL + data + ".png";
             break;
     }
 }

@@ -26,7 +26,7 @@ canvas#GameCanvas{background-color: #fff;}
     position: absolute; overflow-wrap: break-word; 
     border-radius: 5px;
 } 
-#bubble p { margin-top: 10px; margin-bottom: 0; }
+#bubble p { margin-top: 10px; margin-bottom: 0; line-height: 1.2; }
 
 #ChatForm{
     border-radius: 15px; padding: 10px;
