@@ -66,10 +66,9 @@ async function addUser(data){//Adiciona usuário no banco de dados
 	}
 } 
 
-async function UpdateRoupas(data){//Atualiza as Roupas
+async function UpdateRoupa(data){//Atualiza as Roupas
 	try{
 		console.log(data)
-		await pool.query("update itens i set base = $1 from player p where p.id_player = i.id_player and username = $2;", [data.base, data.username])
 		await pool.query("update itens i set roupa = $1 from player p where p.id_player = i.id_player and username = $2;", [data.roupa, data.username])
 		await pool.query("update itens i set cabelo = $1 from player p where p.id_player = i.id_player and username = $2;", [data.cabelo, data.username])
 		await pool.query("update itens i set adicional = $1 from player p where p.id_player = i.id_player and username = $2;", [data.adicional, data.username])

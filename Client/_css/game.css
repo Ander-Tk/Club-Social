@@ -71,14 +71,6 @@ canvas#GameCanvas{background-color: #fff;}
     position: relative; left: 25%;
 }
 
-#LoginBtn, #RegistroBtn{
-    background: #5d7a87;
-    font-size: 15px;
-    border-radius: 6px;
-    color: white;
-    border: 2px solid white;
-}
-
 /*Botões e icones*/
 .GameBTN{
     border: none;

@@ -325,12 +325,6 @@ Img.player['Cabelo-26'] = new Image();
 Img.player['Cabelo-26'].src = "/Client/Sprites/Cabelo/Cabelo-26.png";
 Img.player['Cabelo-27'] = new Image();
 Img.player['Cabelo-27'].src = "/Client/Sprites/Cabelo/Cabelo-27.png";
-Img.player['Cabelo-28'] = new Image();
-Img.player['Cabelo-28'].src = "/Client/Sprites/Cabelo/Cabelo-28.png";
-Img.player['Cabelo-29'] = new Image();
-Img.player['Cabelo-29'].src = "/Client/Sprites/Cabelo/Cabelo-29.png";
-Img.player['Cabelo-30'] = new Image();
-Img.player['Cabelo-30'].src = "/Client/Sprites/Cabelo/Cabelo-30.png";
 
 //Item Adicional
 Img.player['Adc-00'] = new Image();

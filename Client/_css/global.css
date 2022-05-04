@@ -15,9 +15,6 @@ body{background-color: #d9d9d9;}
 #CabeloBox{width: 415px;}
 #RoupaBox{width: 230px}
 
-/*Loja*/
-.LojaRoupa{display: contents;}
-
 .Painel{
     color: rgb(78, 85, 102);
     text-align: center;
@@ -38,6 +35,13 @@ body{background-color: #d9d9d9;}
     border: none; background: none;
     font-weight: bold; padding: 0;
     color: darkcyan;
+}
+/*Login e Registro*/
+#LoginBtn, #RegistroBtn{
+    cursor: url(/Client/_css/link.cur), pointer;
+    background: #5d7a87; border-radius: 6px;
+    font-size: 15px; color: white;
+    border: 2px solid white;
 }
 
 #UserDiv{
@@ -87,6 +91,10 @@ body{background-color: #d9d9d9;}
 input[type=radio] {display:none;}
 input[type=radio] + label>img { width: 40px; height: auto; padding: 2px; image-rendering: pixelated;}
 input[type=radio]:checked + label>img {transform: translateY(-10px);}
+/*Estilos na Loja*/
+label>input[type=radio]+img { width: 40px; height: auto; padding: 2px; image-rendering: pixelated;}
+label>input[type=radio]:checked+img {transform: translateY(-10px);}
+.ItemBox>label>input+img {padding: 0px;}
 
 /*Preview Player*/
 .FramePosition{position: relative; margin-top: -10px; left: -13%;}
@@ -96,3 +104,27 @@ input[type=radio]:checked + label>img {transform: translateY(-10px);}
 
 /*Interação*/
 #DesenhoDiv{display: none;}
+
+/*Loja*/
+#LojaRoupaDiv{display:none; z-index: 3; background-color: #00000045; border-radius: 6px; top: 43.2%;}
+#LojaRoupa{margin-top: 35px;}
+#LojaForm{
+    min-height: 23em; max-width: 40em;
+    text-align: center; padding-top: 5px;
+    margin: auto auto 2em auto; border-radius: 12px;
+    background-color: rgb(243 242 229);
+    border: 0.4em solid #7e5191;
+    box-shadow: 0px 0px 0px 2px #f3f2e5;
+} 
+#tab-3>.ItemBox {margin-top: 35px;}
+
+.closeLoja{
+    position: absolute;
+    top: 40px; left: 78px;
+    background-color: #7e5191;
+    color: white; font-size: 28px; font-weight: bold;
+    padding: 0px 10px 0px 5px;
+    border-radius: 0px 0px 15px 0px;
+}
+.closeLoja:hover,.closeLoja:focus {color: rgb(83, 83, 83); text-decoration: none; cursor: url(/Client/_css/link.cur), pointer;}
+  
