@@ -128,17 +128,17 @@
             <span class="closeLoja">&times;</span>
         <div id="Preview" class="FramePosition">
             <img id="Background" src="/Client/Sprites/Preview/Back.png">
-            <img id="Bases" src="/Client/Sprites/Preview/PreviewBase/B0.png">
-            <img id="Roupas" src="/Client/Sprites/Preview/PreviewRoupa/R0.png">
-            <img id="Cabelos" src="/Client/Sprites/Preview/PreviewCabelo/C0.png">
-            <img id="Adicional" src="/Client/Sprites/Preview/PreviewAdicional/ADC0.png">
+            <img id="Bases" src="">
+            <img id="Roupas" src="">
+            <img id="Cabelos" src="">
+            <img id="Adicional" src="">
         </div>
 
         <div class="tabs">
-            <button type="button" class="tab active" onclick="openTab(event, 'tab-1')"><span>Cabelos</span></button>
-            <button type="button" class="tab" onclick="openTab(event, 'tab-2')"><span>Roupas</span></button>
-            <button type="button" class="tab" onclick="openTab(event, 'tab-3')"><span>Extras</span></button>
-            <hr id="divisor">
+            <button type="button" class="TabLoja tab active" onclick="openTab(event, 'tab-1')"><span>Cabelos</span></button>
+            <button type="button" class="TabLoja tab" onclick="openTab(event, 'tab-2')"><span>Roupas</span></button>
+            <button type="button" class="TabLoja tab" onclick="openTab(event, 'tab-3')"><span>Extras</span></button>
+            <hr id="DivisorLoja">
         </div>
         <div class="content__inner" id="tab-1">
             <!-- Cabelos -->
@@ -311,6 +311,9 @@
         <button class="GameBTN" id="ModalMapBtn"><img class="GameIcon" src="/Client/Sprites/miniWorld.png"></button>
         <div id="DesenhoDiv">
             <button class="GameBTN" onclick="changeMap(this.id)" id="Desenho"><img class="GameIcon" src="/Client/Sprites/Painter.png"></button>
+        </div>
+        <div id="LojaDiv">
+            <button class="GameBTN" id="LojaBtn"><img class="GameIcon" src="/Client/Sprites/LojaRoupa.png"></button>
         </div>
         <!-- Mapa -->
         <div class="Modal" id="ModalMap">

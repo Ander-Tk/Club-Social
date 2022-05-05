@@ -12,9 +12,7 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/Client/index.html');
 });
 
-server.listen(process.env.PORT || 3000, () => {
-  console.log('Ok');
-});
+server.listen(process.env.PORT || 3000);
 
 //Configuração do Banco Postgres
 const {Pool} = require('pg');
@@ -55,7 +53,6 @@ async function UsernameTaken(data){//Verifica se o  usuário está disponível
 
 async function addUser(data){//Adiciona usuário no banco de dados
 	try{
-		console.log(data)
 		await pool.query("insert into player(username, senha, moedas) values ($1, crypt($2, gen_salt('bf')), 500)", [data.username, data.password])
 		await pool.query("insert into itens (base, roupa, cabelo, adicional) values ($1, $2, $3, $4)", [data.base, data.roupa, data.cabelo, 'Adc-00'])
 	}catch(err){
@@ -68,7 +65,6 @@ async function addUser(data){//Adiciona usuário no banco de dados
 
 async function UpdateRoupa(data){//Atualiza as Roupas
 	try{
-		console.log(data)
 		await pool.query("update itens i set roupa = $1 from player p where p.id_player = i.id_player and username = $2;", [data.roupa, data.username])
 		await pool.query("update itens i set cabelo = $1 from player p where p.id_player = i.id_player and username = $2;", [data.cabelo, data.username])
 		await pool.query("update itens i set adicional = $1 from player p where p.id_player = i.id_player and username = $2;", [data.adicional, data.username])
@@ -82,7 +78,6 @@ async function UpdateRoupa(data){//Atualiza as Roupas
 
 async function UpdateCasa(data){//Atualiza a Casa
 	try{
-		console.log(data)
 		await pool.query("update casa c set parede = $1 from player p where p.id_player = c.id_player and username = $2;", [data.parede, data.username])
 		await pool.query("update casa c set piso = $1 from player p where p.id_player = c.id_player and username = $2;", [data.piso, data.username])
 	}catch(err){
@@ -93,6 +88,18 @@ async function UpdateCasa(data){//Atualiza a Casa
 	}
 } 
 
+async function Visitar(VisitaName){//Obtém informação
+	try{
+		await pool.connect()
+		VisitarPlayer = await pool.query("select * from player INNER JOIN casa ON player.id_Player = casa.id_Player WHERE username = $1", [VisitaName]);
+	}catch(err){
+		console.log('erro: %d', err.stack)
+		await pool.query("ROLLBACK")
+	}finally{
+		//await  pool.end()
+		return VisitarPlayer
+	}
+} 
 
 //Player
 var Player = function(data){
@@ -112,6 +119,10 @@ var Player = function(data){
 		layout:data.layout,
 		parede:data.parede,
 		piso:data.piso,
+		//Visitando Player
+		layoutVst:data.layoutVst,
+		paredeVst:data.paredeVst,
+		pisoVst:data.pisoVst,
 		//Movimento
 		pressingRight:false,
 		pressingLeft:false,
@@ -426,10 +437,13 @@ var Player = function(data){
 	}
 
 	self.getInitPack = function(){//Retorna as características iniciais do player
-		return{id:self.id, x:self.x, y:self.y, map:self.map, base:self.base, roupa:self.roupa, cabelo:self.cabelo, adicional:self.adicional, username:self.username}
+		return{id:self.id, x:self.x, y:self.y, map:self.map, base:self.base, roupa:self.roupa, cabelo:self.cabelo, adicional:self.adicional, username:self.username, layout:self.layout, parede:self.parede, piso:self.piso}
 	}
 	self.getUpdatePack = function(){
 		return{id:self.id, x:self.x, y:self.y, map:self.map, Rota:self.Rota,
+			roupa:self.roupa, cabelo:self.cabelo, adicional:self.adicional,
+			layout:self.layout, parede:self.parede, piso:self.piso,
+			layoutVst:self.layoutVst, paredeVst:self.paredeVst, pisoVst:self.pisoVst,
 			Right:self.pressingRight,
 			Left:self.pressingLeft,
 			Up:self.pressingUp,
@@ -468,7 +482,7 @@ var TempoDesenho = 120; // 2 minutos para desenhar
 var TimeID = null;
 
 //Funções do Player
-Player.onConnect = function(socket, base, roupa, cabelo, adicional, username, map){
+Player.onConnect = function(socket, base, roupa, cabelo, adicional, username, layout, parede, piso, map){
 	var map = 'Centro';
 	socket.join(map);
 
@@ -477,6 +491,7 @@ Player.onConnect = function(socket, base, roupa, cabelo, adicional, username, ma
 	var player = Player({
 		id:socket.id, 
 		base:base, roupa:roupa, cabelo:cabelo, adicional:adicional, 
+		layout:layout, parede:parede, piso:piso,
 		username:username, 
 		map:map,
 		PlayerColor:PlayerColor,
@@ -498,6 +513,14 @@ Player.onConnect = function(socket, base, roupa, cabelo, adicional, username, ma
 		player.Rota = null;
 	})
 
+	//Atualiza as Roupas do Jogador
+	socket.on('UpdateRoupa',function(data){
+		player.roupa = data.roupa;
+		player.cabelo = data.cabelo;
+		player.adicional = data.adicional;
+		UpdateRoupa(data);
+	});
+
 	//Input de movimento
 	socket.on('keyPress',function(data){
 		if(data.inputId === 'left')
@@ -517,7 +540,29 @@ Player.onConnect = function(socket, base, roupa, cabelo, adicional, username, ma
 	})
 
 	socket.on('MsgToServer', function(data, SenderID, Map){
-		if(Map ===  'Desenho'){
+		if((data === "/Casa" || (data.split(' ')[0]) === '/Casa') && ((data.split(' ')[1]) === undefined || (data.split(' ')[1]) === Player.list[SenderID].username)){
+			User = Player.list[SenderID].username;
+			player.x = 400; player.y = 240;
+			socket.leave(Player.list[SenderID].Map);
+			socket.join('Casa '+User);
+			player.map = 'Casa '+User;
+		}
+		else if((data.split(' ')[0]) === '/Casa' && ((data.split(' ')[1]) != undefined && (data.split(' ')[1]) != Player.list[SenderID].username)){
+			VisitaName = data.split(' ')[1];
+			var res = Visitar(VisitaName)
+			res.then(res => {
+				if(res.rows[0] != undefined){
+					player.layoutVst = res.rows[0].layout;
+					player.paredeVst = res.rows[0].parede;
+					player.pisoVst = res.rows[0].piso;
+					player.x = 400; player.y = 240;
+					socket.leave(Player.list[SenderID].Map);
+					socket.join('Casa '+VisitaName);
+					player.map = 'Casa '+VisitaName;
+				}
+			});
+		}
+		else if(Map ===  'Desenho'){
 			if(SenderID === Pintor){return;}
 			ChutePalavra = data.charAt(0).toUpperCase()+ data.slice(1);
 			GanhadorDesenho(ChutePalavra, SenderID, Player.list[SenderID].PlayerColor);
@@ -655,7 +700,6 @@ Player.update = function(socket){
 var SOCKET_LIST = {};
 //Conexões socket.
 io.on('connection', (socket) => {
-  console.log('Connected');
   socket.id = socket.id;
   SOCKET_LIST[socket.id] = socket;
 	//Fazer login
@@ -663,7 +707,7 @@ io.on('connection', (socket) => {
 		var res = ValidPassword(data)
 		res.then(res => {
 			if(res.rows[0] != undefined){
-				Player.onConnect(socket, res.rows[0].base, res.rows[0].roupa, res.rows[0].cabelo, res.rows[0].adicional, res.rows[0].username);
+				Player.onConnect(socket, res.rows[0].base, res.rows[0].roupa, res.rows[0].cabelo, res.rows[0].adicional, res.rows[0].username, res.rows[0].layout, res.rows[0].parede, res.rows[0].piso);
 				socket.emit('LoginResp',{success:true});
 			}
 			else{

@@ -86,6 +86,8 @@ body{background-color: #d9d9d9;}
 }
 
 #divisor{margin: 0px}
+#DivisorLoja{margin: 0px; border: 1px solid; color: #7e5191;}
+
   
 /*Estilos das opções*/
 input[type=radio] {display:none;}
@@ -117,6 +119,21 @@ label>input[type=radio]:checked+img {transform: translateY(-10px);}
     box-shadow: 0px 0px 0px 2px #f3f2e5;
 } 
 #tab-3>.ItemBox {margin-top: 35px;}
+.TabLoja{
+    border-radius: 6px 6px 0 0;
+    border-color: white;
+    padding: 5px;
+    font-size: 1em;
+    background: #7e5191;
+    color: rgba(245, 245, 245, 255);
+}
+
+#UpdateRoupa{
+    cursor: url(/Client/_css/link.cur), pointer;
+    background: #7e5191; border-radius: 6px;
+    font-size: 15px; color: white;
+    border: 2px solid white;
+}
 
 .closeLoja{
     position: absolute;

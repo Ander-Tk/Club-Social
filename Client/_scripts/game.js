@@ -94,8 +94,55 @@ socket.on('RegistroResp', function (data) {
 //Interface
 var GameUI = document.getElementById("GameUI");
 var DesenhoDiv = document.getElementById("DesenhoDiv");
+var LojaDiv = document.getElementById("LojaDiv");
 var DrawMenu = document.getElementById("DrawMenu");
 var DrawPintor = document.getElementById("DrawPintor");
+
+//Loja de Roupas
+var LojaRoupaDiv = document.getElementById("LojaRoupaDiv");
+var UpdateRoupa = document.getElementById("UpdateRoupa");
+var LojaBtn = document.getElementById("LojaBtn");
+var closeLoja = document.getElementsByClassName("closeLoja")[0];
+
+LojaBtn.onclick = function () { 
+    player = Player.list[selfID]; //Pega o  jogador
+    //Config Componentes + URL
+    Base = document.getElementById("Bases"); BaseURL = '/Client/Sprites/Preview/PreviewBase/';
+    Roupa = document.getElementById("Roupas"); RoupaURL = '/Client/Sprites/Preview/PreviewRoupa/';
+    Cabelo = document.getElementById("Cabelos"); CabeloURL = '/Client/Sprites/Preview/PreviewCabelo/';
+    Adicional = document.getElementById("Adicional"); AdicionalURL = '/Client/Sprites/Preview/PreviewAdicional/';
+
+    //Roupas do Jogador
+    BasePlayer = player.base.charAt(0) + Number(player.base.split('-')[1]);
+    RoupaPlayer = player.roupa.charAt(0) + Number(player.roupa.split('-')[1]);
+    CabeloPlayer = player.cabelo.charAt(0) + Number(player.cabelo.split('-')[1]);
+    AdicionalPlayer = 'ADC' + Number(player.adicional.split('-')[1]);
+    
+    //Coloca na Preview a roupa atual do jogador
+    Base.src = BaseURL + BasePlayer + ".png";
+    Roupa.src = RoupaURL + RoupaPlayer + ".png";
+    Cabelo.src = CabeloURL + CabeloPlayer + ".png";
+    Adicional.src = AdicionalURL + AdicionalPlayer + ".png";
+    
+    //Torna a Loja visivel 
+    LojaRoupaDiv.style.display = "block";
+}
+closeLoja.onclick = function () { LojaRoupaDiv.style.display = "none"; } //Fecha a  loja
+
+//Update Roupas
+UpdateRoupa.onclick = function () {
+    player = Player.list[selfID]; //Pega o  jogador
+    Roupa  = RoupaValue(); Cabelo = CabeloValue(); Adicional = AdicionalValue();
+    
+    if(Roupa === undefined){ Roupa = player.roupa}
+    if(Cabelo === undefined){ Cabelo = player.cabelo}
+    if(Adicional === undefined){ Adicional = player.adicional}
+    
+    socket.emit('UpdateRoupa', { id:player.id, username: player.Name, roupa: Roupa, cabelo: Cabelo, adicional: Adicional });
+
+    //Fecha a Loja
+    LojaRoupaDiv.style.display = "none";
+}
 
 //Mapa
 var ModalMap = document.getElementById("ModalMap");
@@ -360,16 +407,84 @@ Img.Map['Escola'].src = "/Client/Sprites/Mapas/escola.png";
 Img.Map['Loja'] = new Image();
 Img.Map['Loja'].src = "/Client/Sprites/Mapas/loja.png";
 
+//Casa [Layout, Pisos, Paredes]
+Img.Map['Layout-00'] = new Image();
+Img.Map['Layout-00'].src = "/Client/Sprites/Casa/Layout/Layout-00.png";
+Img.Map['Layout-01'] = new Image();
+Img.Map['Layout-01'].src = "/Client/Sprites/Casa/Layout/Layout-01.png";
+Img.Map['Layout-02'] = new Image();
+Img.Map['Layout-02'].src = "/Client/Sprites/Casa/Layout/Layout-02.png";
+Img.Map['Layout-03'] = new Image();
+Img.Map['Layout-03'].src = "/Client/Sprites/Casa/Layout/Layout-03.png";
+//Pisos
+Img.Map['floor-00'] = new Image();
+Img.Map['floor-00'].src = "/Client/Sprites/Casa/Piso/floor-00.png";
+Img.Map['floor-01'] = new Image();
+Img.Map['floor-01'].src = "/Client/Sprites/Casa/Piso/floor-01.png";
+Img.Map['floor-02'] = new Image();
+Img.Map['floor-02'].src = "/Client/Sprites/Casa/Piso/floor-02.png";
+Img.Map['floor-03'] = new Image();
+Img.Map['floor-03'].src = "/Client/Sprites/Casa/Piso/floor-03.png";
+Img.Map['floor-04'] = new Image();
+Img.Map['floor-04'].src = "/Client/Sprites/Casa/Piso/floor-04.png";
+Img.Map['floor-05'] = new Image();
+Img.Map['floor-05'].src = "/Client/Sprites/Casa/Piso/floor-05.png";
+Img.Map['floor-06'] = new Image();
+Img.Map['floor-06'].src = "/Client/Sprites/Casa/Piso/floor-06.png";
+//Paredes
+Img.Map['wall-00'] = new Image();
+Img.Map['wall-00'].src = "/Client/Sprites/Casa/Parede/wall-00.png";
+Img.Map['wall-01'] = new Image();
+Img.Map['wall-01'].src = "/Client/Sprites/Casa/Parede/wall-01.png";
+Img.Map['wall-02'] = new Image();
+Img.Map['wall-02'].src = "/Client/Sprites/Casa/Parede/wall-02.png";
+Img.Map['wall-03'] = new Image();
+Img.Map['wall-03'].src = "/Client/Sprites/Casa/Parede/wall-03.png";
+Img.Map['wall-04'] = new Image();
+Img.Map['wall-04'].src = "/Client/Sprites/Casa/Parede/wall-04.png";
+Img.Map['wall-05'] = new Image();
+Img.Map['wall-05'].src = "/Client/Sprites/Casa/Parede/wall-05.png";
+Img.Map['wall-06'] = new Image();
+Img.Map['wall-06'].src = "/Client/Sprites/Casa/Parede/wall-06.png";
+Img.Map['wall-07'] = new Image();
+Img.Map['wall-07'].src = "/Client/Sprites/Casa/Parede/wall-07.png";
+Img.Map['wall-08'] = new Image();
+Img.Map['wall-08'].src = "/Client/Sprites/Casa/Parede/wall-08.png";
+Img.Map['wall-09'] = new Image();
+Img.Map['wall-09'].src = "/Client/Sprites/Casa/Parede/wall-09.png";
+Img.Map['wall-10'] = new Image();
+Img.Map['wall-10'].src = "/Client/Sprites/Casa/Parede/wall-10.png";
+Img.Map['wall-11'] = new Image();
+Img.Map['wall-11'].src = "/Client/Sprites/Casa/Parede/wall-11.png";
+Img.Map['wall-12'] = new Image();
+Img.Map['wall-12'].src = "/Client/Sprites/Casa/Parede/wall-12.png";
+Img.Map['wall-13'] = new Image();
+Img.Map['wall-13'].src = "/Client/Sprites/Casa/Parede/wall-13.png";
+Img.Map['wall-14'] = new Image();
+Img.Map['wall-14'].src = "/Client/Sprites/Casa/Parede/wall-14.png";
+Img.Map['wall-15'] = new Image();
+Img.Map['wall-15'].src = "/Client/Sprites/Casa/Parede/wall-15.png";
+Img.Map['wall-16'] = new Image();
+Img.Map['wall-16'].src = "/Client/Sprites/Casa/Parede/wall-16.png";
+
 //Desenha o mapa
 drawMap = function () {
     var player = Player.list[selfID];
+    //Tamanho dos Mapas
+    var MapWidth = 400;
+    var MapHeight = 240;
+
     if (Gamelist.includes(player.Map)) {
         return; //Se estiver jogando não desenha o Mapa
-    } else {
-        //Tamanho dos Mapas
-        var MapWidth = Img.Map[player.Map].width;
-        var MapHeight = Img.Map[player.Map].height;
-
+    }else if((player.Map.split(' ')[0]) === 'Casa' && (player.Map.split(' ')[1]) === player.Name){
+		ctx.drawImage(Img.Map[player.piso], 0, 0, MapWidth * 2, MapHeight * 2);
+		ctx.drawImage(Img.Map[player.parede], 0, 0, MapWidth * 2, MapHeight * 2);
+		ctx.drawImage(Img.Map[player.layout], 0, 0, MapWidth * 2, MapHeight * 2);
+    }else if((player.Map.split(' ')[0]) === 'Casa' && (player.Map.split(' ')[1]) != player.Name){
+		ctx.drawImage(Img.Map[player.pisoVst], 0, 0, MapWidth * 2, MapHeight * 2);
+		ctx.drawImage(Img.Map[player.paredeVst], 0, 0, MapWidth * 2, MapHeight * 2);
+		ctx.drawImage(Img.Map[player.layoutVst], 0, 0, MapWidth * 2, MapHeight * 2);
+    }else {
         ctx.drawImage(Img.Map[player.Map], 0, 0, MapWidth * 2, MapHeight * 2);
     }
 }
@@ -461,9 +576,16 @@ var GameLogic = function () {
             DrawPintor.style.display =  "none";
 
             break;
+        case 'Loja':
+            GameCanvas.style.display = "none"; 
+            canvas.style.display = "block";
+            GameUI.style.display =  "block";
+            LojaDiv.style.display = "block";    
+            break;
         default:
             canvas.style.display = "block";
             GameUI.style.display =  "block";
+            LojaDiv.style.display = "none";  
             DesenhoDiv.style.display = 'none';
             GameCanvas.style.display = "none"; 
             DrawMenu.style.display =  "none";
@@ -648,9 +770,14 @@ var Player = function (pack) {
     self.adicional = pack.adicional;
 
     //Casa Jogador
-    //self.layout = pack.layout;
-    //self.parede = pack.parede;
-    //self.piso = pack.piso;
+    self.layout = pack.layout;
+    self.parede = pack.parede;
+    self.piso = pack.piso;
+
+    //Visitando Jogador
+    self.layoutVst = pack.layoutVst;
+    self.paredeVst = pack.paredeVst;
+    self.pisoVst = pack.pisoVst;
 
     //Direções
     self.Right = pack.Right;
@@ -765,6 +892,27 @@ socket.on('update', function (data) {
                 p.Map = pack.map;
             if (pack.Rota !== undefined)
                 p.Rota = pack.Rota;
+            //Update Roupas
+            if (pack.roupa !== undefined)
+                p.roupa = pack.roupa;
+            if (pack.cabelo !== undefined)
+                p.cabelo = pack.cabelo;
+            if (pack.adicional !== undefined)
+                p.adicional = pack.adicional;
+            //Casa
+            if (pack.layout !== undefined)
+                p.layout = pack.layout;
+            if (pack.parede !== undefined)
+                p.parede = pack.parede;
+            if (pack.piso !== undefined)
+                p.piso = pack.piso;
+            //Visitando
+            if (pack.layoutVst !== undefined)
+                p.layoutVst = pack.layoutVst;
+            if (pack.paredeVst !== undefined)
+                p.paredeVst = pack.paredeVst;
+            if (pack.pisoVst !== undefined)
+                p.pisoVst = pack.pisoVst;
         }
     }
 });
