@@ -97,6 +97,7 @@ var DesenhoDiv = document.getElementById("DesenhoDiv");
 var LojaDiv = document.getElementById("LojaDiv");
 var DrawMenu = document.getElementById("DrawMenu");
 var DrawPintor = document.getElementById("DrawPintor");
+var cafeDiv = document.getElementById("cafeDiv");
 
 //Loja de Roupas
 var LojaRoupaDiv = document.getElementById("LojaRoupaDiv");
@@ -490,7 +491,7 @@ drawMap = function () {
 }
 
 //Lista de Jogos
-Gamelist = ['Desenho', 'OutroJogo'];
+Gamelist = ['Desenho', 'CafeMix'];
 
 //Variaveis do Desenho
 var current = {color: 'black'};
@@ -567,6 +568,13 @@ var GameLogic = function () {
             }
 
             break;
+        
+        case 'CafeMix':
+            canvas.style.display = "none";
+            GameCanvas.style.display = "block";
+            GameUI.style.display =  "none";
+            break;
+
         case 'Escola':
             canvas.style.display = "block";
             GameUI.style.display =  "block";
@@ -582,15 +590,25 @@ var GameLogic = function () {
             GameUI.style.display =  "block";
             LojaDiv.style.display = "block";    
             break;
+
+        case 'Cafe':
+            GameCanvas.style.display = "none"; 
+            canvas.style.display = "block";
+            GameUI.style.display =  "block";
+            cafeDiv.style.display = "block";    
+            break;
+
         default:
             canvas.style.display = "block";
             GameUI.style.display =  "block";
-            LojaDiv.style.display = "none";  
+            LojaDiv.style.display = "none"; 
+            cafeDiv.style.display = "none";   
             DesenhoDiv.style.display = 'none';
             GameCanvas.style.display = "none"; 
             DrawMenu.style.display =  "none";
             DrawPintor.style.display =  "none";
             break;
+            
     }
 }
 
