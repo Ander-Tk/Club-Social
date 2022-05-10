@@ -98,6 +98,22 @@ var LojaDiv = document.getElementById("LojaDiv");
 var DrawMenu = document.getElementById("DrawMenu");
 var DrawPintor = document.getElementById("DrawPintor");
 var cafeDiv = document.getElementById("cafeDiv");
+var mixdiv = document.getElementById("cafemixdiv");
+
+//cafemix
+var iniciarmix = document.getElementById("iniciarmix");
+var sairmix = document.getElementById("sairmix");
+
+sairmix.onclick = function(){
+    player = Player.list[selfID];
+
+    socket.emit('changeMap',{Mapa:'Cafe', OldMap:player.Map});
+}
+//variavel pra iniciar
+var playmix = 0;
+iniciarmix.onclick = function(){
+   playmix = 1
+}
 
 //Loja de Roupas
 var LojaRoupaDiv = document.getElementById("LojaRoupaDiv");
@@ -261,6 +277,10 @@ ctxGame.imageSmoothingEnabled = false; //Imagem bem definida
 const Img = {};
 Img.player = new Image();
 Img.Map = new Image();
+
+//cafemix
+Img.Cafemix = new Image();
+Img.Cafemix.src = "/Client/Sprites/cafemix.png";
 
 //Base Player
 Img.player['Base-00'] = new Image();
@@ -573,7 +593,21 @@ var GameLogic = function () {
             canvas.style.display = "none";
             GameCanvas.style.display = "block";
             GameUI.style.display =  "none";
+            mixdiv.style.display = "block";
+            
+            if(playmix === 1){
+                mixdiv.style.display = "none";
+                ctxGame.clearRect(0, 0, ctxWidth, ctxHeight);
+                ctxGame.drawImage(Img.Cafemix, 0, 0, ctxWidth, ctxHeight);
+
+                setTimeout(() => {
+                    playmix = 0;
+                    ctxGame.clearRect(0, 0, ctxWidth, ctxHeight);
+                    mixdiv.style.display = "block";
+                }, 10000);
+            }
             break;
+
 
         case 'Escola':
             canvas.style.display = "block";
@@ -595,7 +629,8 @@ var GameLogic = function () {
             GameCanvas.style.display = "none"; 
             canvas.style.display = "block";
             GameUI.style.display =  "block";
-            cafeDiv.style.display = "block";    
+            cafeDiv.style.display = "block"; 
+            mixdiv.style.display = "none";   
             break;
 
         default:
@@ -607,6 +642,7 @@ var GameLogic = function () {
             GameCanvas.style.display = "none"; 
             DrawMenu.style.display =  "none";
             DrawPintor.style.display =  "none";
+            mixdiv.style.display = "none";
             break;
             
     }
