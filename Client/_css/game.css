@@ -147,4 +147,16 @@ canvas#GameCanvas{background-color: #fff;}
     font-size: 50px;
     text-align: center;
 }
+/*Estilos Café Mix*/
 #cafemixdiv{z-index: 3;}
+
+.MixBtn{
+    color: white;
+    border: white 2px solid;
+    border-radius: 5px;
+    font-family: cursive;
+    font-size: larger;
+}
+
+#iniciarmix{background-color: aquamarine;}
+#sairmix{background-color: #f87979;}

@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/Client/index.html');
 });
 
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 3000, () => { console.log('Ok'); });
 
 //Configuração do Banco Postgres
 const {Pool} = require('pg');
@@ -561,6 +561,9 @@ Player.onConnect = function(socket, base, roupa, cabelo, adicional, username, la
 					player.map = 'Casa '+VisitaName;
 				}
 			});
+		}
+		else if(Map ===  'CafeMix'){
+			return;
 		}
 		else if(Map ===  'Desenho'){
 			if(SenderID === Pintor){return;}

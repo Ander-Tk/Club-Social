@@ -104,16 +104,14 @@ var mixdiv = document.getElementById("cafemixdiv");
 var iniciarmix = document.getElementById("iniciarmix");
 var sairmix = document.getElementById("sairmix");
 
-sairmix.onclick = function(){
+sairmix.onclick = function(){ //Volta para o café;
     player = Player.list[selfID];
-
     socket.emit('changeMap',{Mapa:'Cafe', OldMap:player.Map});
 }
+
 //variavel pra iniciar
 var playmix = 0;
-iniciarmix.onclick = function(){
-   playmix = 1
-}
+iniciarmix.onclick = function(){playmix = 1}//Inicia o  minigame.
 
 //Loja de Roupas
 var LojaRoupaDiv = document.getElementById("LojaRoupaDiv");
@@ -280,7 +278,18 @@ Img.Map = new Image();
 
 //cafemix
 Img.Cafemix = new Image();
-Img.Cafemix.src = "/Client/Sprites/cafemix.png";
+Img.Cafemix.src = "/Client/Sprites/CafeMix/cafemix.png";
+
+Img.Cafemix['Peixe'] = new Image();
+Img.Cafemix['Peixe'].src = "/Client/Sprites/CafeMix/Peixe.png";
+Img.Cafemix['Pato'] = new Image();
+Img.Cafemix['Pato'].src = "/Client/Sprites/CafeMix/Pato.png";
+Img.Cafemix['Leite'] = new Image();
+Img.Cafemix['Leite'].src = "/Client/Sprites/CafeMix/Leite.png";
+Img.Cafemix['Donut'] = new Image();
+Img.Cafemix['Donut'].src = "/Client/Sprites/CafeMix/Donut.png";
+Img.Cafemix['Sanduiche'] = new Image();
+Img.Cafemix['Sanduiche'].src = "/Client/Sprites/CafeMix/Sanduiche.png";
 
 //Base Player
 Img.player['Base-00'] = new Image();
@@ -523,6 +532,87 @@ var PintorAtual =  null;
 var PalavraAtual = null;
 var TemaAtual = null;
 
+//Varaveis CaféMix
+var RunMix = 0; //Executa o  loop  1 vez.
+var keys = [];
+var ingredientes = [];
+var ScoreMix = 0; //Pontuação do minigame
+var pressKey = false;
+var KeyZ, KeyX, KeyC; //Teclas
+
+function random(min, max){return Math.round((Math.random() * (max - min))+min);}
+
+function ingrediente(){//Cria um ingrediente
+    var id = Math.random();
+    var x = 0; //Posição inicial
+    var vx = Math.random() * 2 + 1; //Velocidade aleatória
+    var life = 1;
+    
+    //Linha aleatória. 
+    var spawn = random(1,4);
+    if (spawn == 1){var y = 100;}//Topo
+    if (spawn == 2){var y = 200;}//Centro
+    if (spawn == 3){var y = 300;}//Baixo
+    
+    //Imagem e valor do ingrediente. 
+    var type = random(1,5);
+    if (type == 1){var imgIng = 'Peixe'; var valIng = -30}
+    if (type == 2){var imgIng = 'Pato'; var valIng = -15}
+    if (type == 3){var imgIng = 'Leite'; var valIng = 15}
+    if (type == 4){var imgIng = 'Donut'; var valIng = 30}
+    if (type == 5){var imgIng = 'Sanduiche'; var valIng = 20}
+    
+    var pack = {
+      id: id, life: life,
+      imgIng: imgIng, valIng: valIng,
+      x: x, y: y, vx: vx
+    }
+    ingredientes.push(pack);
+}
+
+function MixEngine(entity){
+    ItemWidth = Img.Cafemix[entity.imgIng].width;
+    ItemHeight = Img.Cafemix[entity.imgIng].height;
+
+    ctxGame.beginPath();
+    ctxGame.drawImage(Img.Cafemix[entity.imgIng], entity.x, (entity.y - 40), ItemWidth *2, ItemHeight *2);
+    ctxGame.stroke();
+    
+    entity.x += entity.vx *2;
+    
+    if (entity.x > ctxWidth){entity.life = 0; }//Destroi o ingrediente quando sair da tela
+
+    //Verificar tecla pressionada;
+    if ((entity.x > 350 && entity.x < 450) && pressKey){
+        if(entity.y == 100 && KeyZ == 1){entity.life = 0; ScoreMix += entity.valIng}
+        if(entity.y == 200 && KeyX == 1){entity.life = 0; ScoreMix += entity.valIng}
+        if(entity.y == 300 && KeyC == 1){entity.life = 0; ScoreMix += entity.valIng}
+    }
+}
+
+//Ativar Teclas
+function KeyMix(e){
+    if (e.code == 'KeyZ' && !pressKey) {//Tecla Z
+        pressKey = true; KeyZ = 1;
+        console.log('apertou z')
+    }
+    if (e.code == 'KeyX' && !pressKey) {//Tecla X 
+        pressKey = true; KeyX = 1;
+        console.log('apertou x')
+    }
+    if (e.code == 'KeyC' && !pressKey) {//Tecla C
+        pressKey = true; KeyC = 1;
+        console.log('apertou c')
+    }
+}
+//Soltar Teclas
+function KeyMixUp(e){ 
+    pressKey = false;
+    KeyZ = 0; KeyX = 0; KeyC = 0;
+}
+
+
+
 //Logica dos minigames
 var GameLogic = function () {
     switch(Player.list[selfID].Map){
@@ -594,20 +684,41 @@ var GameLogic = function () {
             GameCanvas.style.display = "block";
             GameUI.style.display =  "none";
             mixdiv.style.display = "block";
-            
-            if(playmix === 1){
+
+            if(playmix === 1){ //Aqui está dentro do loop;
                 mixdiv.style.display = "none";
                 ctxGame.clearRect(0, 0, ctxWidth, ctxHeight);
                 ctxGame.drawImage(Img.Cafemix, 0, 0, ctxWidth, ctxHeight);
 
-                setTimeout(() => {
-                    playmix = 0;
-                    ctxGame.clearRect(0, 0, ctxWidth, ctxHeight);
-                    mixdiv.style.display = "block";
-                }, 10000);
+                for (var key in ingredientes){
+                    MixEngine(ingredientes[key]);
+                    if (ingredientes[key].life <= 0){
+                      delete ingredientes[key];
+                    }
+                }
+
+                document.addEventListener("keydown", KeyMix);
+                document.addEventListener("keyup", KeyMixUp);
+                
+                if(RunMix === 0){//Aqui só executa uma vez;
+                    RunMix = 1;
+
+                    SpawnIngrediente = setInterval(ingrediente, 2000); //Joga ingredientes.
+
+                    setTimeout(() => {
+                        playmix = 0; RunMix = 0; ScoreMix = 0; //Reseta as variaveis.
+                        clearInterval(SpawnIngrediente);
+                        for (var key in ingredientes){delete ingredientes[key];} //Remove os itens restantes.
+                        ctxGame.clearRect(0, 0, ctxWidth, ctxHeight);
+                        mixdiv.style.display = "block";
+
+                        //Remove os eventos.
+                        document.removeEventListener("keypress", KeyMix);
+                        document.removeEventListener("keyup", KeyMixUp);
+                    }, 30000);
+                }
             }
             break;
-
 
         case 'Escola':
             canvas.style.display = "block";
