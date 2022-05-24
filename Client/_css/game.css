@@ -150,13 +150,22 @@ canvas#GameCanvas{background-color: #fff;}
 /*Estilos Café Mix*/
 #cafemixdiv{z-index: 3;}
 
+#DivisorMix{
+    position: fixed;
+    bottom: 10%; left: 45%; right: 45%;
+    display: grid;
+    justify-items: center;
+}
+
 .MixBtn{
     color: white;
     border: white 2px solid;
     border-radius: 5px;
+    margin-bottom: 10px;
     font-family: cursive;
-    font-size: larger;
+    font-size: 150%;
 }
 
 #iniciarmix{background-color: aquamarine;}
+#helpmix{background-color: #fff6a6;}
 #sairmix{background-color: #f87979;}

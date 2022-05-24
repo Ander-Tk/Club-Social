@@ -277,9 +277,12 @@ Img.player = new Image();
 Img.Map = new Image();
 
 //cafemix
-Img.Cafemix = new Image();
+Img.Cafemix = new Image(); //Background [Game]
 Img.Cafemix.src = "/Client/Sprites/CafeMix/cafemix.png";
-
+//Background [Menu]
+Img.Cafemix['Background'] = new Image();
+Img.Cafemix['Background'].src = "/Client/Sprites/CafeMix/MixBack.png";
+//Ingredientes
 Img.Cafemix['Peixe'] = new Image();
 Img.Cafemix['Peixe'].src = "/Client/Sprites/CafeMix/Peixe.png";
 Img.Cafemix['Pato'] = new Image();
@@ -549,7 +552,7 @@ function ingrediente(){//Cria um ingrediente
     var life = 1;
     
     //Linha aleatória. 
-    var spawn = random(1,4);
+    var spawn = random(1,3);
     if (spawn == 1){var y = 100;}//Topo
     if (spawn == 2){var y = 200;}//Centro
     if (spawn == 3){var y = 300;}//Baixo
@@ -611,6 +614,13 @@ function KeyMixUp(e){
     KeyZ = 0; KeyX = 0; KeyC = 0;
 }
 
+//Mostrar Placar
+function PlacarMix(ScoreMix){      
+    ChatBox.innerHTML += '<div id="ResultadoDraw"><p> Pontuação: '+ScoreMix+'</p></div>';
+    setTimeout(function () {//Remove em 2.5 segundos
+        ChatBox.removeChild(ChatBox.firstChild);
+    }, 2500);
+}
 
 
 //Logica dos minigames
@@ -684,19 +694,19 @@ var GameLogic = function () {
             GameCanvas.style.display = "block";
             GameUI.style.display =  "none";
             mixdiv.style.display = "block";
+            ctxGame.drawImage(Img.Cafemix['Background'], 0, 0, ctxWidth, ctxHeight);
 
             if(playmix === 1){ //Aqui está dentro do loop;
                 mixdiv.style.display = "none";
                 ctxGame.clearRect(0, 0, ctxWidth, ctxHeight);
                 ctxGame.drawImage(Img.Cafemix, 0, 0, ctxWidth, ctxHeight);
 
-                for (var key in ingredientes){
+                for (var key in ingredientes){//Verifica os ingredientes no canvas.
                     MixEngine(ingredientes[key]);
-                    if (ingredientes[key].life <= 0){
-                      delete ingredientes[key];
-                    }
+                    if (ingredientes[key].life <= 0){delete ingredientes[key];}
                 }
 
+                //Controles
                 document.addEventListener("keydown", KeyMix);
                 document.addEventListener("keyup", KeyMixUp);
                 
@@ -706,16 +716,26 @@ var GameLogic = function () {
                     SpawnIngrediente = setInterval(ingrediente, 2000); //Joga ingredientes.
 
                     setTimeout(() => {
-                        playmix = 0; RunMix = 0; ScoreMix = 0; //Reseta as variaveis.
-                        clearInterval(SpawnIngrediente);
+                        clearInterval(SpawnIngrediente); //Limpa o intervalo de spawn.
                         for (var key in ingredientes){delete ingredientes[key];} //Remove os itens restantes.
-                        ctxGame.clearRect(0, 0, ctxWidth, ctxHeight);
-                        mixdiv.style.display = "block";
+                        
+                        RunMix = 2; //Entra no Loop vazio.
+                        PlacarMix(ScoreMix);//Mostrar Plontuação.
 
-                        //Remove os eventos.
+                        setTimeout(() => {
+                            playmix = 0; RunMix = 0; ScoreMix = 0; //Reseta as variaveis.
+                            mixdiv.style.display = "block";
+                        }, 2800);
+
+                        //Remove os controles.
                         document.removeEventListener("keypress", KeyMix);
                         document.removeEventListener("keyup", KeyMixUp);
-                    }, 30000);
+                    }, 60000); //60 segundos (temporário)
+                }
+
+                if (RunMix == 2) {//Loop para Limpar o Canvas para mostrar o placar
+                    ctxGame.clearRect(0, 0, ctxWidth, ctxHeight);
+                    ctxGame.drawImage(Img.Cafemix['Background'], 0, 0, ctxWidth, ctxHeight);
                 }
             }
             break;
