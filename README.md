@@ -8,8 +8,8 @@ O Club Social trata-se de um jogo social online baseado em mundos virtuais.
 Seus Jogadores podem personalizar um avatar próprio, andar em diversos mapas, se comunicar em mapas diferentes jogar com outros jogadores.
 
 ### Link de acesso:
-```http
-  https://club-social-tcc.herokuapp.com/
+```
+  club-social-tcc.herokuapp.com/
 ```
 
 ## Autores
